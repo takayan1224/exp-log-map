@@ -1,0 +1,973 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>指数・対数 必須事項マップ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="katex/katex.min.css">
+<script defer src="katex/katex.min.js"></script>
+<script defer src="katex/auto-render.min.js"></script>
+<style>
+:root{
+  --bg:#f5f2ea; --paper:#fffdf8; --ink:#1d2230; --sub:#737784; --line:#e3ddd0;
+  --c1:#e06a52; --c2:#d4932a; --c3:#2a9d8f; --c4:#3c67a6; --c5:#8a5ca6;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Zen Kaku Gothic New","Yu Gothic UI","Yu Gothic","Hiragino Sans",sans-serif;
+  padding-bottom:120px;
+  background-image:radial-gradient(circle at 1px 1px,#e2dccd 1px,transparent 0);
+  background-size:22px 22px;
+}
+.katex{font-size:1.08em}
+
+/* ---------- header ---------- */
+header{
+  position:sticky; top:0; z-index:20;
+  background:rgba(245,242,234,.88); backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+  padding:14px 28px 12px;
+}
+.top{display:flex; align-items:baseline; gap:18px; flex-wrap:wrap}
+h1{margin:0; font-size:26px; font-weight:900; letter-spacing:.06em}
+h1 small{font-size:12px; font-weight:700; letter-spacing:.3em; color:var(--sub); margin-left:10px}
+.bridge{margin-left:auto; color:var(--sub); font-size:17px}
+
+.map{display:flex; align-items:center; margin-top:12px; flex-wrap:wrap; row-gap:8px}
+.chip{
+  display:flex; align-items:center; gap:10px; cursor:pointer;
+  padding:6px 14px 6px 8px; border-radius:999px; background:var(--paper);
+  border:1px solid var(--line); transition:.25s; font:inherit; color:inherit;
+}
+.chip:hover{transform:translateY(-1px); box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.chip .n{width:26px; height:26px; border-radius:50%; display:grid; place-items:center; background:var(--ac); color:#fff; font-weight:900; font-size:13px}
+.chip .nm{font-weight:700; font-size:14px; white-space:nowrap}
+.dots{display:flex; gap:4px}
+.dots i{width:7px; height:7px; border-radius:50%; background:var(--line); transition:.3s}
+.dots i.on{background:var(--ac)}
+.dots i.cur{box-shadow:0 0 0 2px var(--paper),0 0 0 3.5px var(--ac)}
+.chip.done{border-color:var(--ac)}
+.arrow{width:26px; height:2px; background:var(--line); position:relative; margin:0 4px}
+.arrow::after{content:""; position:absolute; right:-1px; top:-3px; border:4px solid transparent; border-left:6px solid var(--line); border-right:0}
+
+/* ---------- board ---------- */
+main{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:22px; padding:26px 28px; max-width:1900px; margin:0 auto; align-items:start;
+}
+.chap{scroll-margin-top:140px}
+.chap>h2{margin:0 0 14px; display:flex; align-items:flex-end; gap:12px; font-size:19px; font-weight:900; letter-spacing:.04em}
+.chap>h2 .big{font-size:46px; line-height:.8; color:var(--ac); font-family:"Cambria","Times New Roman",serif; font-weight:700}
+.chap>h2 .en{display:block; font-size:10px; letter-spacing:.25em; color:var(--sub); font-weight:700; margin-bottom:3px}
+
+.card{
+  background:var(--paper); border-radius:16px; margin-bottom:12px;
+  border:1px solid var(--line); position:relative; overflow:hidden;
+  transition:box-shadow .3s, transform .3s, border-color .3s;
+  scroll-margin-top:150px; user-select:none;
+}
+.card::before{content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--ac); opacity:.25; transition:.3s}
+.card.open::before{opacity:1}
+.card.cur{border-color:var(--ac); box-shadow:0 10px 30px -10px color-mix(in srgb,var(--ac) 55%,transparent); transform:translateY(-2px)}
+.head{
+  all:unset; box-sizing:border-box; width:100%; cursor:pointer;
+  display:grid; grid-template-columns:auto 1fr auto; align-items:center; column-gap:10px;
+  padding:13px 14px 13px 18px;
+}
+.no{font-family:"Cambria","Times New Roman",serif; font-size:13px; color:var(--ac); font-weight:700; letter-spacing:.05em}
+.ttl{font-weight:700; font-size:16px}
+.q{grid-column:2/3; font-size:13px; color:var(--sub); margin-top:2px; transition:.3s}
+.q .katex{font-size:1em}
+.card.open .q{opacity:0; height:0; margin:0; overflow:hidden}
+.tog{
+  grid-row:1/3; grid-column:3; width:28px; height:28px; border-radius:50%;
+  border:1.5px solid var(--line); display:grid; place-items:center; color:var(--sub);
+  font-size:18px; transition:.35s;
+}
+.card.open .tog{transform:rotate(45deg); background:var(--ac); border-color:var(--ac); color:#fff}
+.zhint{
+  position:absolute; right:12px; bottom:10px; font-size:11px; color:var(--sub); opacity:0; transition:.3s;
+  border:1px solid var(--line); border-radius:999px; padding:1px 8px; background:var(--paper); pointer-events:none;
+}
+.card.open:hover .zhint{opacity:1}
+
+.body{display:grid; grid-template-rows:0fr; transition:grid-template-rows .45s cubic-bezier(.3,.7,.2,1)}
+.card.open .body{grid-template-rows:1fr}
+.inner{overflow:hidden; min-height:0}
+.pad{padding:2px 18px 18px; opacity:0; transform:translateY(-6px); transition:.35s .1s}
+.card.open .pad{opacity:1; transform:none}
+.rei{display:none}
+
+/* ---------- びりびり→バーン ---------- */
+.zap{position:relative; text-align:center; margin:12px 0 4px; padding:22px 0 12px; border-radius:14px;
+  background:radial-gradient(ellipse at center,color-mix(in srgb,var(--ac) 8%,transparent),transparent 70%)}
+.zexp{min-height:2.6em; display:flex; justify-content:center; align-items:center}
+.zexp .katex{font-size:2.6em}
+.zap .za,.zap .zb,.zap .zl,.zap .zr{display:inline-block; transition:transform .45s, opacity .45s, filter .45s, color .3s}
+.zap.charge .za,.zap.charge .zb{color:#e8a400; text-shadow:0 0 6px #ffd84d,0 0 16px #ffb300; animation:jit .07s infinite}
+@keyframes jit{0%{transform:translate(0,0) rotate(0)}25%{transform:translate(1.5px,-1px) rotate(-3deg)}50%{transform:translate(-1.5px,1px) rotate(2deg)}75%{transform:translate(1px,1.5px) rotate(-1deg)}}
+.zap.bang .za,.zap.bang .zb,.zap.bang .zl{animation:none; transform:scale(2.2); opacity:0; filter:blur(5px)}
+.zap.bang{animation:shake .4s}
+@keyframes shake{20%{transform:translate(-6px,2px)}40%{transform:translate(5px,-3px)}60%{transform:translate(-3px,2px)}80%{transform:translate(2px,-1px)}}
+.zap .zr{transition:transform .8s cubic-bezier(.3,1.6,.5,1), color .4s; transform-origin:left bottom}
+.zap.done .zr{color:var(--ac)}
+.zap .bolt{position:absolute; inset:0; pointer-events:none; overflow:visible}
+.zap .bolt path{fill:none; stroke:#ffcf33; stroke-width:4; stroke-linejoin:round; filter:drop-shadow(0 0 4px #ffb300) drop-shadow(0 0 10px #ffe680)}
+.zap .bolt path.thin{stroke:#fff6c2; stroke-width:1.2}
+.zap .spark{position:absolute; width:7px; height:7px; border-radius:50%; background:#ffc93c; box-shadow:0 0 8px #ffb300; pointer-events:none;
+  transition:transform .7s cubic-bezier(.1,.8,.3,1), opacity .7s}
+.zap .flash{position:absolute; width:20px; height:20px; border-radius:50%; pointer-events:none; transform:translate(-50%,-50%) scale(0);
+  background:radial-gradient(circle,#fff 0%,#ffe680 35%,rgba(255,200,50,0) 70%); animation:flash .5s ease-out forwards}
+@keyframes flash{50%{transform:translate(-50%,-50%) scale(9); opacity:1}100%{transform:translate(-50%,-50%) scale(12); opacity:0}}
+.zcap{opacity:0; transform:translateY(6px); transition:.5s; color:var(--sub); margin-top:4px}
+.zcap .katex{font-size:1.5em}
+.zap.done .zcap{opacity:1; transform:none}
+.zplay{all:unset; cursor:pointer; font-size:12px; font-weight:700; color:var(--ac); border:1px solid var(--ac); border-radius:50%; width:30px; height:30px; display:inline-grid; place-items:center; padding-left:2px; box-sizing:border-box; margin-top:8px; opacity:.7}
+.zplay:hover{opacity:1}
+.zcard .zap{font-size:1.4em}
+
+/* ---------- 常時ループするアニメーション ---------- */
+/* 不等号の向きが変わる（< がくるっと > になる） */
+.flip{display:inline-block; color:var(--ac); animation:flip 3.2s ease-in-out infinite}
+@keyframes flip{
+  0%,22%{transform:rotateY(180deg) scale(1); color:#9a9ca6; text-shadow:none}
+  36%{transform:rotateY(0) scale(1.7); color:var(--ac); text-shadow:0 0 12px color-mix(in srgb,var(--ac) 60%,transparent)}
+  50%,86%{transform:rotateY(0) scale(1.3); color:var(--ac); text-shadow:0 0 6px color-mix(in srgb,var(--ac) 40%,transparent)}
+  100%{transform:rotateY(180deg) scale(1); color:#9a9ca6; text-shadow:none}
+}
+/* 指数が前に下りてくる */
+.dsc{display:inline-block; transform-origin:left bottom; animation:dsc 4.2s ease-in-out infinite}
+.dsc.meas{animation:none!important; transform:none!important}
+@keyframes dsc{
+  0%,16%{transform:none; color:inherit; opacity:1}
+  46%,80%{transform:translate(var(--dx,0),var(--dy,0)) scale(var(--s,1)); color:var(--ac); opacity:1}
+  88%{transform:translate(var(--dx,0),var(--dy,0)) scale(var(--s,1)); color:var(--ac); opacity:0}
+  89%{transform:none; opacity:0}
+  100%{transform:none; opacity:1}
+}
+/* 底の変換公式：同じ色どうしが対応 */
+.ca,.cb{display:inline-block; font-weight:700}
+.cb{color:#e06a52; animation:pairb 4s ease-in-out infinite}
+.ca{color:#3c67a6; animation:paira 4s ease-in-out infinite}
+@keyframes pairb{0%,4%{transform:none}16%,30%{transform:scale(1.5); text-shadow:0 0 10px rgba(224,106,82,.55)}44%,100%{transform:none; text-shadow:none}}
+@keyframes paira{0%,54%{transform:none}66%,80%{transform:scale(1.5); text-shadow:0 0 10px rgba(60,103,166,.55)}94%,100%{transform:none; text-shadow:none}}
+/* 桁数・首位の n */
+.nn,.nn2{display:inline-block; color:var(--ac); font-weight:700; animation:nnp 1.6s ease-in-out infinite}
+@keyframes nnp{0%,100%{transform:scale(1)}50%{transform:scale(1.35)}}
+.digits{margin:10px 0 2px; padding:12px 10px 10px; border-radius:12px; background:color-mix(in srgb,var(--ac) 6%,transparent); text-align:center; min-height:7.4em}
+.dg{animation:dgin .45s ease-out}
+@keyframes dgin{from{opacity:0; transform:translateY(5px)}}
+.dg-m{font-size:15px}
+.dg-m .katex{font-size:1.15em}
+.dg-row{display:flex; justify-content:center; align-items:center; gap:4px; margin-top:8px; padding-bottom:1.1em; font-size:15px; flex-wrap:wrap}
+.dg-c{position:relative; width:1.6em; height:1.8em; border-radius:6px; border:1.5px solid var(--ac); display:grid; place-items:center;
+  font-family:"Cambria",serif; font-weight:700; color:var(--ac); background:var(--paper); animation:pop .35s backwards}
+.dg-c.z{border-color:#cfcabe; color:#9a9ca6}
+.dg-c.hot{background:var(--ac); color:#fff}
+.dg-c i{position:absolute; top:calc(100% + 2px); left:50%; transform:translateX(-50%); font-size:.62em; font-style:normal; color:var(--sub); font-weight:700}
+.dg-dot{font-family:"Cambria",serif; font-weight:700; font-size:1.3em; color:var(--sub); align-self:flex-end; margin:0 1px}
+.dg-eq{color:var(--sub); margin-right:6px}
+.dg-to{margin-left:10px; font-weight:700}
+.zcard .dg-m,.zcard .dg-row{font-size:1.25em}
+
+/* ---------- 式・部品 ---------- */
+.f{font-size:17px; padding:4px 0; line-height:1.6}
+.f .katex{font-size:1.25em}
+.f.lg .katex{font-size:1.45em}
+.iffc{color:var(--ac)}
+.hl{color:var(--ac); font-weight:700}
+.box{display:inline-block; background:color-mix(in srgb,var(--ac) 14%,transparent); border-radius:6px; padding:0 .3em}
+.cond{display:inline-block; font-size:12.5px; color:var(--sub); border:1px solid var(--line); border-radius:999px; padding:2px 10px; margin:6px 0 4px}
+.cond .katex{font-size:1em}
+.memo{font-size:13.5px; margin:8px 0 0; padding-left:14px; position:relative; color:#3b4050; line-height:1.7}
+.memo::before{content:""; position:absolute; left:0; top:.6em; width:7px; height:7px; border-radius:2px; background:var(--ac)}
+.ex{font-size:14px; color:#4a4f5c; background:color-mix(in srgb,var(--ac) 7%,transparent); border-radius:10px; padding:6px 12px; margin-top:8px; line-height:1.9}
+.ex .lb{font-size:11px; font-weight:700; color:var(--ac); letter-spacing:.1em; margin-right:8px}
+.tbl{display:grid; grid-template-columns:auto 1fr; gap:6px 14px; margin:8px 0 2px; align-items:center}
+.tbl dt{font-size:12.5px; color:var(--sub); font-weight:700}
+.tbl dd{margin:0; font-size:15px}
+.tbl dd .katex{font-size:1.25em}
+.tbl dt .katex{font-size:1.15em; color:var(--ink); font-weight:400}
+.two{display:grid; grid-template-columns:auto 1fr; gap:4px 12px; align-items:center; font-size:14.5px}
+.tag{font-size:12px; font-weight:700; color:#fff; background:var(--ac); border-radius:6px; padding:1px 8px; white-space:nowrap; justify-self:start}
+.tag.alt{background:#8b8f9a}
+.tag .katex{font-size:1em}
+.steps{counter-reset:st}
+.step{counter-increment:st; display:flex; gap:10px; align-items:baseline; padding:4px 0}
+.step::before{content:counter(st); font-family:"Cambria",serif; font-weight:700; color:var(--ac); font-size:15px; min-width:12px}
+.step .t{font-size:14.5px; line-height:1.8}
+
+/* ---------- グラフ ---------- */
+.plot{position:relative; margin:6px 0 4px}
+.plot svg{width:100%; height:auto; display:block}
+.plot .curve{fill:none; stroke-width:2.6; stroke-linecap:round; stroke-dasharray:1; stroke-dashoffset:1}
+.card.open .plot .curve, .zoom .plot .curve{animation:draw 1.3s .25s cubic-bezier(.4,.1,.2,1) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.plot .pl{position:absolute; transform:translate(-50%,-50%); font-size:12px; white-space:nowrap; color:var(--sub)}
+.plot .pl .katex{font-size:1.1em}
+.plot .pl.c{opacity:0; font-size:13px}
+.card.open .plot .pl.c, .zoom .plot .pl.c{animation:fade .6s 1.1s forwards}
+@keyframes fade{to{opacity:1}}
+
+/* ---------- control bar ---------- */
+.bar{
+  position:fixed; left:50%; bottom:18px; transform:translateX(-50%); z-index:30;
+  display:flex; align-items:center; gap:8px; padding:8px; border-radius:999px;
+  background:rgba(29,34,48,.94); color:#fff; box-shadow:0 14px 40px -12px rgba(0,0,0,.45);
+}
+.bar button{all:unset; cursor:pointer; padding:10px 16px; border-radius:999px; font-size:14px; font-weight:700; transition:.2s; white-space:nowrap; color:#d9dbe2}
+.bar button:hover{background:rgba(255,255,255,.1); color:#fff}
+.bar .main{background:#fff; color:var(--ink); padding:11px 26px; font-size:16px}
+.bar .main:hover{background:#f0ece2; color:var(--ink)}
+.count{font-family:"Cambria",serif; font-size:17px; min-width:70px; text-align:center; letter-spacing:.05em}
+.count b{font-size:22px}
+.sep{width:1px; height:22px; background:rgba(255,255,255,.18); margin:0 4px}
+.prog{position:fixed; left:0; top:0; height:3px; background:linear-gradient(90deg,var(--c1),var(--c2),var(--c3),var(--c4),var(--c5)); z-index:40; transition:width .4s}
+
+/* ---------- 拡大 ---------- */
+.zoom{
+  position:fixed; inset:0; z-index:50; display:none; place-items:center;
+  background:rgba(245,242,234,.94); backdrop-filter:blur(6px); padding:30px 40px 100px;
+}
+.zoom.show{display:grid}
+.zcard{
+  position:relative; background:var(--paper); border-radius:28px; border:2px solid var(--ac);
+  width:min(1150px,94vw); max-height:calc(100vh - 130px); overflow:auto;
+  padding:34px 54px 34px; font-size:clamp(15px,1.5vw,24px);
+  box-shadow:0 30px 80px -30px rgba(0,0,0,.3); animation:pop .35s cubic-bezier(.3,1.4,.5,1);
+}
+@keyframes pop{from{transform:scale(.96); opacity:0}}
+.zclose{position:absolute; top:18px; right:22px; all:unset; cursor:pointer}
+.zcard .zx{position:absolute; top:20px; right:24px; width:40px; height:40px; border-radius:50%; border:1.5px solid var(--line); display:grid; place-items:center; color:var(--sub); cursor:pointer; font-size:22px; background:var(--paper)}
+.zcard .zx:hover{border-color:var(--ac); color:var(--ac)}
+.zcard .zh{display:flex; align-items:baseline; gap:16px; margin:0 56px 10px 0}
+.zcard .zh .no{font-size:1.4em}
+.zcard .zh .ttl{font-size:2em; font-weight:900}
+.zcard .zh .chn{margin-left:auto; color:var(--sub); font-size:.85em; font-weight:700}
+.zcard .pad{opacity:1; transform:none; padding:0}
+.zcard .f{font-size:1.5em}
+.zcard .cond{font-size:.95em}
+.zcard .memo{font-size:1.05em}
+.zcard .ex{font-size:1.15em}
+.zcard .ex .lb{font-size:.6em}
+.zcard .tbl dt{font-size:1em}
+.zcard .tbl dd{font-size:1.4em}
+.zcard .tag{font-size:.9em}
+.zcard .two{font-size:1.1em; gap:10px 18px}
+.zcard .step .t{font-size:1.25em}
+.zcard .step::before{font-size:1.25em}
+.zcard .plot{max-width:540px; margin:10px auto}
+.zcard .plot .pl{font-size:1em}
+.zcard .plot .pl.c{font-size:1.05em}
+
+/* 例題 */
+.reibar{display:flex; gap:12px; margin-top:22px; padding-top:18px; border-top:1.5px dashed var(--line)}
+.rbtn{
+  all:unset; cursor:pointer; display:inline-flex; align-items:center; gap:8px;
+  padding:9px 22px; border-radius:999px; font-weight:700; font-size:.9em;
+  border:1.5px solid var(--ac); color:var(--ac); transition:.2s;
+}
+.rbtn:hover{background:color-mix(in srgb,var(--ac) 10%,transparent)}
+.rbtn.on{background:var(--ac); color:#fff}
+.rbtn .k{font-size:.75em; opacity:.6; font-family:"Cambria",serif}
+.rbtn[hidden]{display:none}
+.reibody{display:grid; grid-template-rows:0fr; transition:grid-template-rows .5s cubic-bezier(.3,.7,.2,1)}
+.reibody.show{grid-template-rows:1fr}
+.reibody>div{overflow:hidden; min-height:0}
+.reibox{margin-top:16px; border-radius:18px; background:color-mix(in srgb,var(--ac) 6%,var(--paper)); padding:20px 28px 22px}
+.reibox h3{margin:0 0 8px; font-size:.85em; letter-spacing:.2em; color:var(--ac)}
+.probs{margin:0; padding-left:0; list-style:none; counter-reset:pr}
+.probs li{counter-increment:pr; padding:6px 0 6px 2.2em; position:relative; font-size:1.05em; line-height:1.9}
+.probs li::before{content:"(" counter(pr) ")"; position:absolute; left:0; color:var(--ac); font-weight:700}
+.probs .katex{font-size:1.2em}
+.ans{display:grid; grid-template-rows:0fr; transition:grid-template-rows .45s}
+.ans.show{grid-template-rows:1fr}
+.ans>div{overflow:hidden; min-height:0}
+.ansbox{margin-top:14px; border-left:4px solid var(--ac); padding:4px 0 4px 20px}
+.ansbox .probs li{font-size:1em}
+
+@media (max-width:700px){
+  header{padding:12px 16px}
+  main{padding:18px 16px}
+  .bridge{margin-left:0}
+  .bar{bottom:10px; gap:2px}
+  .bar button{padding:9px 10px; font-size:13px}
+  .bar .opt{display:none}
+  .zoom{padding:12px 12px 80px}
+  .zcard{padding:24px 20px}
+}
+@media print{
+  header{position:static}
+  .bar,.prog{display:none}
+  .card .body{grid-template-rows:1fr}
+}
+</style>
+</head>
+<body>
+<div class="prog" id="prog"></div>
+
+<header>
+  <div class="top">
+    <h1>指数・対数　必須事項マップ<small>EXPONENT &amp; LOGARITHM</small></h1>
+    <div class="bridge">$a^p=M \Leftrightarrow p=\log_a M$</div>
+  </div>
+  <nav class="map" id="map"></nav>
+</header>
+
+<main id="board">
+
+<!-- ================= 1 指数の拡張 ================= -->
+<section class="chap" style="--ac:var(--c1)" data-name="指数の拡張">
+  <h2><span class="big">01</span><span><span class="en">EXTENSION OF EXPONENTS</span>指数の拡張</span></h2>
+
+  <article class="card">
+    <button class="head"><span class="no">1-1</span><span class="ttl">0・負の整数の指数</span><span class="tog">+</span><span class="q">$a^0=\,?\quad a^{-n}=\,?$</span></button>
+    <div class="body"><div class="inner"><div class="pad">
+      <span class="cond">$a\neq 0$，$n$ は正の整数</span>
+      <div class="f">$a^0=1$</div>
+      <div class="f">$a^{-n}=\dfrac{1}{a^n}$</div>
+      <p class="memo">指数法則が成り立つように決めた</p>
+    </div></div></div>
+    <div class="rei">
+      <ol class="probs"><li>$3^{-2}$</li><li>$(-5)^0$</li><li>$10^{-3}$</li></ol>
+      <ol class="probs"><li>$\dfrac{1}{3^2}=\dfrac19$</li><li>$1$</li><li>$\dfrac{1}{10^3}=0.001$</li></ol>
+    </div>
+  </article>
+
+  <article class="card">
+    <button class="head"><span class="no">1-2</span><span class="ttl">累乗根</span><span class="tog">+</span><span class="q">「$a$ の $n$ 乗根」とは？</span></button>
+    <div class="body"><div class="inner"><div class="pad">
+      <div class="f">$a$ の $n$ 乗根：$x^n=a$ となる $x$</div>
+      <span class="cond">$a&gt;0$ のとき</span>
+      <div class="f">$\sqrt[n]{a}$ ：正の $n$ 乗根</div>
+      <div class="f">$\left(\sqrt[n]{a}\right)^n=a$</div>
+      <div class="ex"><span class="lb">EX</span>$\sqrt[3]{8}=2\quad \sqrt[4]{81}=3\quad \sqrt[3]{-8}=-2$</div>
+      <p class="memo">$n$ が奇数なら，負の数の $n$ 乗根もただ1つ</p>
+    </div></div></div>
+    <div class="rei">
+      <ol class="probs"><li>$\sqrt[3]{27}$</li><li>$\sqrt[4]{16}$</li><li>$\sqrt[5]{-32}$</li></ol>
+      <ol class="probs"><li>$3^3=27$ より $3$</li><li>$2^4=16$ より $2$</li><li>$(-2)^5=-32$ より $-2$</li></ol>
+    </div>
+  </article>
+
+  <article class="card">
+    <button class="head"><span class="no">1-3</span><span class="ttl">累乗根の性質</span><span class="tog">+</span><span class="q">積・商・累乗・根号の重なり</span></button>
+    <div class="body"><div class="inner"><div class="pad">
+      <span class="cond">$a&gt;0,\ b&gt;0$，$m,\,n$ は正の整数</span>
+      <div class="f">$\sqrt[n]{a}\,\sqrt[n]{b}=\sqrt[n]{ab}$</div>
+      <div class="f">$\dfrac{\sqrt[n]{a}}{\sqrt[n]{b}}=\sqrt[n]{\dfrac{a}{b}}$</div>
+      <div class="f">$\left(\sqrt[n]{a}\right)^m=\sqrt[n]{a^m}$</div>
+      <div class="f">$\sqrt[m]{\sqrt[n]{a}}=\sqrt[mn]{a}$</div>
+    </div></div></div>
+    <div class="rei">
+      <ol class="probs"><li>$\sqrt[3]{4}\,\sqrt[3]{16}$</li><li>$\dfrac{\sqrt[4]{48}}{\sqrt[4]{3}}$</li><li>$\sqrt[3]{\sqrt{64}}$</li></ol>
+      <ol class="probs"><li>$\sqrt[3]{64}=4$</li><li>$\sqrt[4]{16}=2$</li><li>$\sqrt[6]{64}=2$</li></ol>
+    </div>
+  </article>
+
+  <article class="card">
+    <button class="head"><span class="no">1-4</span><span class="ttl">有理数の指数</span><span class="tog">+</span><span class="q">$a^{\frac{m}{n}}$ は？</span></button>
+    <div class="body"><div class="inner"><div class="pad">
+      <span class="cond">$a&gt;0$，$m$ は整数，$n$ は正の整数</span>
+      <div class="f lg">$a^{\frac{m}{n}}=\sqrt[n]{a^m}=\left(\sqrt[n]{a}\right)^m$</div>
+      <div class="f">$a^{\frac{1}{n}}=\sqrt[n]{a}$</div>
+      <div class="ex"><span class="lb">EX</span>$8^{\frac23}=\left(\sqrt[3]{8}\right)^2=4$</div>
+      <p class="memo">累乗根は分数の指数に直して計算</p>
+    </div></div></div>
+    <div class="rei">
+      <ol class="probs"><li>$27^{\frac23}$</li><li>$16^{-\frac34}$</li><li>$\sqrt[3]{a^2}$ を $a^r$ の形で表せ</li></ol>
+      <ol class="probs"><li>$\left(3^3\right)^{\frac23}=3^2=9$</li><li>$\left(2^4\right)^{-\frac34}=2^{-3}=\dfrac18$</li><li>$a^{\frac23}$</li></ol>
+    </div>
+  </article>
+
+  <article class="card">
+    <button class="head"><span class="no">1-5</span><span class="ttl">指数法則</span><span class="tog">+</span><span class="q">4つ言えますか？</span></button>
+    <div class="body"><div class="inner"><div class="pad">
+      <span class="cond">$a&gt;0,\ b&gt;0$，$r,\,s$ は実数</span>
+      <div class="f">$a^r a^s=a^{r+s}$</div>
+      <div class="f">$a^r\div a^s=a^{r-s}$</div>
+      <div class="f">$\left(a^r\right)^s=a^{rs}$</div>
+      <div class="f">$(ab)^r=a^r b^r$</div>
+      <p class="memo">指数は 整数 → 有理数 → 実数 へ拡張</p>
+    </div></div></div>
+    <div class="rei">
+      <ol class="probs"><li>$a^{\frac12}\times a^{\frac13}\div a^{\frac16}$</li><li>$\sqrt{2}\times\sqrt[4]{8}\div\sqrt[4]{2}$</li></ol>
+      <ol class="probs"><li>$a^{\frac12+\frac13-\frac16}=a^{\frac23}$</li><li>$2^{\frac12}\times 2^{\frac34}\div 2^{\frac14}=2^{\frac12+\frac34-\frac14}=2^1=2$</li></ol>
+    </div>
+  </article>
+</section>
+
+<!-- ================= 2 指数関数 ================= -->
+<section class="chap" style="--ac:var(--c2)" data-name="指数関数">
+  <h2><span class="big">02</span><span><span class="en">EXPONENTIAL FUNCTION</span>指数関数</span></h2>
+
+  <article class="card">
+    <button class="head"><span class="no">2-1</span><span class="ttl">指数関数 $y=a^x$</span><span class="tog">+</span><span class="q">定義域・値域・通る点・漸近線</span></button>
+    <div class="body"><div class="inner"><div class="pad">
+      <span class="cond">$a&gt;0,\ a\neq 1$</span>
+      <dl class="tbl">
+        <dt>定義域</dt><dd>実数全体</dd>
+        <dt>値域</dt><dd><span class="box">$y&gt;0$</span></dd>
+        <dt>通る点</dt><dd>$(0,\,1),\ (1,\,a)$</dd>
+        <dt>漸近線</dt><dd>$x$ 軸</dd>
+      </dl>
+    </div></div></div>
+    <div class="rei">
+      <ol class="probs"><li>$y=2^{x-1}+3$ の漸近線と値域を求めよ</li></ol>
+      <ol class="probs"><li>$y=2^x$ を $x$ 軸方向に $1$，$y$ 軸方向に $3$ 平行移動したグラフ<br>漸近線 直線 $y=3$，値域 $y&gt;3$</li></ol>
+    </div>
+  </article>
+
+  <article class="card">
+    <button class="head"><span class="no">2-2</span><span class="ttl">指数関数のグラフ</span><span class="tog">+</span><span class="q">$a&gt;1$ と $0&lt;a&lt;1$ で何が違う？</span></button>
+    <div class="body"><div class="inner"><div class="pad">
+      <div class="plot" data-plot="exp"></div>
+      <div class="two">
+        <span class="tag">$a&gt;1$</span><span>右上がり（増加）</span>
+        <span class="tag alt">$0&lt;a&lt;1$</span><span>右下がり（減少）</span>
+      </div>
+      <p class="memo">$y=\left(\frac1a\right)^x$ は $y=a^x$ と $y$ 軸に関して対称</p>
+    </div></div></div>
+    <div class="rei">
+      <ol class="probs"><li>$y=\left(\frac13\right)^x$ は増加関数か，減少関数か</li><li>$y=\left(\frac13\right)^x$ と $y=3^x$ のグラフの位置関係を答えよ</li></ol>
+      <ol class="probs"><li>底 $\frac13$ は $0&lt;\frac13&lt;1$ なので 減少関数</li><li>$\left(\frac13\right)^x=3^{-x}$ より，$y$ 軸に関して対称</li></ol>
+    </div>
+  </article>
+
+  <article class="card">
+    <button class="head"><span class="no">2-3</span><span class="ttl">大小関係</span><span class="tog">+</span><span class="q">$p&lt;q$ のとき $a^p$ と $a^q$ は？</span></button>
+    <div class="body"><div class="inner"><div class="pad">
+      <span class="tag">$a&gt;1$</span>
+      <div class="f">$p&lt;q \Leftrightarrow a^p&lt;a^q$</div>
+      <span class="tag alt">$0&lt;a&lt;1$</span>
+      <div class="f">$p&lt;q \Leftrightarrow a^p\,\htmlClass{flip}{&gt;}\,a^q$</div>
+      <p class="memo">比べるときは <b>底をそろえる</b></p>
+    </div></div></div>
+    <div class="rei">
+      <ol class="probs"><li>$\sqrt{2},\ \sqrt[3]{4},\ \sqrt[4]{8}$ の大小を比べよ</li></ol>
+      <ol class="probs"><li>$2^{\frac12},\ 2^{\frac23},\ 2^{\frac34}$ で，底 $2&gt;1$ かつ $\frac12&lt;\frac23&lt;\frac34$<br>よって $\sqrt{2}&lt;\sqrt[3]{4}&lt;\sqrt[4]{8}$</li></ol>
+    </div>
+  </article>
+
+  <article class="card">
+    <button class="head"><span class="no">2-4</span><span class="ttl">方程式・不等式</span><span class="tog">+</span><span class="q">解くときの3つのコツ</span></button>
+    <div class="body"><div class="inner"><div class="pad steps">
+      <div class="step"><span class="t">底をそろえる　$a^p=a^q\Leftrightarrow p=q$</span></div>
+      <div class="step"><span class="t">不等式は <b>底と $1$ の大小</b> に注意</span></div>
+      <div class="step"><span class="t">$a^x=t$ とおく → <span class="box">$t&gt;0$</span> を忘れない</span></div>
+    </div></div></div>
+    <div class="rei">
+      <ol class="probs"><li>$4^x=8$</li><li>$\left(\frac12\right)^x&gt;8$</li><li>$4^x-3\cdot 2^x-4=0$</li></ol>
+      <ol class="probs"><li>$2^{2x}=2^3$ より $2x=3$，$x=\dfrac32$</li><li>$2^{-x}&gt;2^3$，底 $2&gt;1$ より $-x&gt;3$，$x&lt;-3$</li><li>$2^x=t\ (t&gt;0)$ とおくと $t^2-3t-4=0$，$(t-4)(t+1)=0$<br>$t&gt;0$ より $t=4$，$2^x=4$ から $x=2$</li></ol>
+    </div>
+  </article>
+</section>
+
+<!-- ================= 3 対数とその性質 ================= -->
+<section class="chap" style="--ac:var(--c3)" data-name="対数とその性質">
+  <h2><span class="big">03</span><span><span class="en">LOGARITHM</span>対数とその性質</span></h2>
+
+  <article class="card">
+    <button class="head"><span class="no">3-1</span><span class="ttl">対数の定義</span><span class="tog">+</span><span class="q">$\log$ と指数の関係は？</span></button>
+    <div class="body"><div class="inner"><div class="pad">
+      <span class="cond">$a&gt;0,\ a\neq1,\ M&gt;0$</span>
+      <div class="f lg">$a^p=M \Leftrightarrow p=\log_a M$</div>
+      <div class="two" style="margin-top:4px">
+        <span class="tag">$a$</span><span>底 ―― $a&gt;0,\ a\neq1$</span>
+        <span class="tag">$M$</span><span>真数 ―― <b>必ず正</b>（真数条件）</span>
+      </div>
+    </div></div></div>
+    <div class="rei">
+      <ol class="probs"><li>$2^5=32$ を対数を使って表せ</li><li>$\log_3 81$</li><li>$\log_{\frac12} 8$</li></ol>
+      <ol class="probs"><li>$\log_2 32=5$</li><li>$3^4=81$ より $4$</li><li>$\left(\frac12\right)^{-3}=8$ より $-3$</li></ol>
+    </div>
+  </article>
+
+  <article class="card">
+    <button class="head"><span class="no">3-2</span><span class="ttl">基本の値</span><span class="tog">+</span><span class="q">$\log_a 1,\ \log_a a$ は？</span></button>
+    <div class="body"><div class="inner"><div class="pad">
+      <div class="f">$\log_a 1=0$</div>
+      <div class="f">$\log_a a=1$</div>
+      <div class="f">$\htmlClass{dst}{\phantom{p}}\log_a a^{\htmlClass{dsc}{p}}=p$</div>
+      <p class="memo">$a^0=1,\ a^1=a$ の言いかえ</p>
+    </div></div></div>
+    <div class="rei">
+      <ol class="probs"><li>$\log_5 1$</li><li>$\log_7 7$</li><li>$\log_2 \sqrt{2}$</li></ol>
+      <ol class="probs"><li>$0$</li><li>$1$</li><li>$\log_2 2^{\frac12}=\dfrac12$</li></ol>
+    </div>
+  </article>
+
+  <article class="card">
+    <button class="head"><span class="no">3-3</span><span class="ttl">対数の性質</span><span class="tog">+</span><span class="q">積・商・累乗の $\log$ は？</span></button>
+    <div class="body"><div class="inner"><div class="pad">
+      <span class="cond">$M&gt;0,\ N&gt;0$，$r$ は実数</span>
+      <div class="f">$\log_a MN=\log_a M+\log_a N$</div>
+      <div class="f">$\log_a \dfrac{M}{N}=\log_a M-\log_a N$</div>
+      <div class="f">$\htmlClass{dst}{\phantom{r}}\log_a M^{\htmlClass{dsc}{r}}=r\log_a M$</div>
+      <p class="memo">積 → 和，商 → 差，累乗 → 係数</p>
+    </div></div></div>
+    <div class="rei">
+      <ol class="probs"><li>$\log_6 4+\log_6 9$</li><li>$\log_3 54-\log_3 2$</li><li>$2\log_2 6-\log_2 9$</li></ol>
+      <ol class="probs"><li>$\log_6 36=2$</li><li>$\log_3 27=3$</li><li>$\log_2 \dfrac{36}{9}=\log_2 4=2$</li></ol>
+    </div>
+  </article>
+
+  <article class="card">
+    <button class="head"><span class="no">3-4</span><span class="ttl">底の変換公式</span><span class="tog">+</span><span class="q">底がちがう $\log$ はどうする？</span></button>
+    <div class="body"><div class="inner"><div class="pad">
+      <span class="cond">$a,\,b,\,c&gt;0,\ a\neq1,\ c\neq1$</span>
+      <div class="f lg">$\log_{\htmlClass{ca}{a}}\htmlClass{cb}{b}=\dfrac{\log_c \htmlClass{cb}{b}}{\log_c \htmlClass{ca}{a}}$</div>
+      <div class="f">特に　$\log_a b=\dfrac{1}{\log_b a}$　<small style="color:var(--sub)">（$b\neq1$）</small></div>
+      <p class="memo">底がバラバラなら，まずそろえる</p>
+    </div></div></div>
+    <div class="rei">
+      <ol class="probs"><li>$\log_4 8$</li><li>$\log_2 3\cdot\log_3 8$</li></ol>
+      <ol class="probs"><li>$\dfrac{\log_2 8}{\log_2 4}=\dfrac32$</li><li>$\log_2 3\cdot\dfrac{\log_2 8}{\log_2 3}=\log_2 8=3$</li></ol>
+    </div>
+  </article>
+
+  <article class="card">
+    <button class="head"><span class="no">3-5</span><span class="ttl">覚えておきたい2つの式</span><span class="tog">+</span><span class="q">$a^{\log_a b}=\,?$</span></button>
+    <div class="body"><div class="inner"><div class="pad">
+      <span class="cond">$a&gt;0,\ a\neq1,\ b&gt;0,\ c\neq0$</span>
+      <div class="f">$\log_a b=\log_{a^c} b^c$</div>
+      <p class="memo" style="margin-top:2px">底と真数を同じだけ累乗しても値は同じ</p>
+      <div class="f" style="margin-top:6px">$a^{\log_a b}=b$</div>
+      <div class="zap">
+        <div class="zexp">$\htmlClass{za}{a}^{\htmlClass{zl}{\log}_{\htmlClass{zb}{a}}\htmlClass{zr}{b}}$</div>
+        <button class="zplay" title="再生">▶</button>
+      </div>
+      <p class="memo">$a$ と底の $a$ が打ち消し合って，$b$ だけが残る</p>
+    </div></div></div>
+    <div class="rei">
+      <ol class="probs"><li>$3^{\log_3 5}$</li><li>$\log_9 27$</li><li>$2^{\log_4 9}$</li></ol>
+      <ol class="probs"><li>$5$</li><li>$\log_9 27=\log_{3^2}\left(3^{\frac32}\right)^2=\log_3 3^{\frac32}=\dfrac32$</li><li>$\log_4 9=\log_{2^2}3^2=\log_2 3$ より $2^{\log_2 3}=3$</li></ol>
+    </div>
+  </article>
+</section>
+
+<!-- ================= 4 対数関数 ================= -->
+<section class="chap" style="--ac:var(--c4)" data-name="対数関数">
+  <h2><span class="big">04</span><span><span class="en">LOGARITHMIC FUNCTION</span>対数関数</span></h2>
+
+  <article class="card">
+    <button class="head"><span class="no">4-1</span><span class="ttl">対数関数 $y=\log_a x$</span><span class="tog">+</span><span class="q">定義域・値域・通る点・漸近線</span></button>
+    <div class="body"><div class="inner"><div class="pad">
+      <span class="cond">$a&gt;0,\ a\neq 1$</span>
+      <dl class="tbl">
+        <dt>定義域</dt><dd><span class="box">$x&gt;0$</span></dd>
+        <dt>値域</dt><dd>実数全体</dd>
+        <dt>通る点</dt><dd>$(1,\,0),\ (a,\,1)$</dd>
+        <dt>漸近線</dt><dd>$y$ 軸</dd>
+      </dl>
+    </div></div></div>
+    <div class="rei">
+      <ol class="probs"><li>$y=\log_2(x-1)$ の定義域と漸近線を求めよ</li></ol>
+      <ol class="probs"><li>真数条件 $x-1&gt;0$ より 定義域 $x&gt;1$<br>漸近線 直線 $x=1$</li></ol>
+    </div>
+  </article>
+
+  <article class="card">
+    <button class="head"><span class="no">4-2</span><span class="ttl">対数関数のグラフ</span><span class="tog">+</span><span class="q">$a&gt;1$ と $0&lt;a&lt;1$ で何が違う？</span></button>
+    <div class="body"><div class="inner"><div class="pad">
+      <div class="plot" data-plot="log"></div>
+      <div class="two">
+        <span class="tag">$a&gt;1$</span><span>右上がり（増加）</span>
+        <span class="tag alt">$0&lt;a&lt;1$</span><span>右下がり（減少）</span>
+      </div>
+    </div></div></div>
+    <div class="rei">
+      <ol class="probs"><li>$y=\log_{\frac12}x$ のグラフは，$y=\log_2 x$ のグラフとどんな位置関係か</li></ol>
+      <ol class="probs"><li>$\log_{\frac12}x=\dfrac{\log_2 x}{\log_2 \frac12}=-\log_2 x$<br>よって $x$ 軸に関して対称</li></ol>
+    </div>
+  </article>
+
+  <article class="card">
+    <button class="head"><span class="no">4-3</span><span class="ttl">指数関数との関係</span><span class="tog">+</span><span class="q">$y=a^x$ と $y=\log_a x$ の位置関係は？</span></button>
+    <div class="body"><div class="inner"><div class="pad">
+      <div class="plot" data-plot="sym"></div>
+      <p class="memo">$y=a^x$ と $y=\log_a x$ は<br>直線 $y=x$ に関して対称</p>
+    </div></div></div>
+    <div class="rei">
+      <ol class="probs"><li>$y=\log_3 x$ のグラフと直線 $y=x$ に関して対称なグラフの式を求めよ</li></ol>
+      <ol class="probs"><li>$y=3^x$</li></ol>
+    </div>
+  </article>
+
+  <article class="card">
+    <button class="head"><span class="no">4-4</span><span class="ttl">大小関係</span><span class="tog">+</span><span class="q">$0&lt;p&lt;q$ のとき $\log_a p$ と $\log_a q$ は？</span></button>
+    <div class="body"><div class="inner"><div class="pad">
+      <span class="tag">$a&gt;1$</span>
+      <div class="f">$0&lt;p&lt;q \Leftrightarrow \log_a p&lt;\log_a q$</div>
+      <span class="tag alt">$0&lt;a&lt;1$</span>
+      <div class="f">$0&lt;p&lt;q \Leftrightarrow \log_a p\,\htmlClass{flip}{&gt;}\,\log_a q$</div>
+    </div></div></div>
+    <div class="rei">
+      <ol class="probs"><li>$\log_2 3,\ 2,\ \log_4 10$ の大小を比べよ</li></ol>
+      <ol class="probs"><li>底を $2$ にそろえる：$2=\log_2 4$，$\log_4 10=\dfrac{\log_2 10}{2}=\log_2\sqrt{10}$<br>$3&lt;\sqrt{10}&lt;4$，底 $2&gt;1$ より $\log_2 3&lt;\log_4 10&lt;2$</li></ol>
+    </div>
+  </article>
+
+  <article class="card">
+    <button class="head"><span class="no">4-5</span><span class="ttl">方程式・不等式</span><span class="tog">+</span><span class="q">最初にやることは？</span></button>
+    <div class="body"><div class="inner"><div class="pad steps">
+      <div class="step"><span class="t"><b>まず真数条件</b>（真数 $&gt;0$）</span></div>
+      <div class="step"><span class="t">底をそろえる　$\log_a p=\log_a q\Leftrightarrow p=q$</span></div>
+      <div class="step"><span class="t">不等式は <b>底と $1$ の大小</b> に注意</span></div>
+      <div class="step"><span class="t">$\log_a x=t$ とおく → $t$ は実数全体</span></div>
+    </div></div></div>
+    <div class="rei">
+      <ol class="probs"><li>$\log_2(x-1)=3$</li><li>$\log_2 x+\log_2(x-2)=3$</li><li>$\log_{\frac12}x&gt;2$</li></ol>
+      <ol class="probs"><li>真数条件 $x&gt;1$。$x-1=2^3$ より $x=9$</li><li>真数条件 $x&gt;2$。$\log_2 x(x-2)=\log_2 8$ より $x^2-2x-8=0$<br>$(x-4)(x+2)=0$，$x&gt;2$ より $x=4$</li><li>真数条件 $x&gt;0$。$\log_{\frac12}x&gt;\log_{\frac12}\frac14$，底 $0&lt;\frac12&lt;1$ より $x&lt;\frac14$<br>よって $0&lt;x&lt;\dfrac14$</li></ol>
+    </div>
+  </article>
+</section>
+
+<!-- ================= 5 常用対数 ================= -->
+<section class="chap" style="--ac:var(--c5)" data-name="常用対数">
+  <h2><span class="big">05</span><span><span class="en">COMMON LOGARITHM</span>常用対数</span></h2>
+
+  <article class="card">
+    <button class="head"><span class="no">5-1</span><span class="ttl">常用対数</span><span class="tog">+</span><span class="q">$\log_{10}2,\ \log_{10}3$ の値は？</span></button>
+    <div class="body"><div class="inner"><div class="pad">
+      <div class="f">底が $10$ の対数　$\log_{10}N$</div>
+      <dl class="tbl">
+        <dt>$\log_{10}2$</dt><dd>$0.3010$</dd>
+        <dt>$\log_{10}3$</dt><dd>$0.4771$</dd>
+        <dt>$\log_{10}5$</dt><dd>$1-\log_{10}2=0.6990$</dd>
+      </dl>
+      <p class="memo">$5=\dfrac{10}{2}$ と見る</p>
+    </div></div></div>
+    <div class="rei">
+      <ol class="probs"><li>$\log_{10}6$</li><li>$\log_{10}1.5$</li></ol>
+      <ol class="probs"><li>$\log_{10}2+\log_{10}3=0.7781$</li><li>$\log_{10}\dfrac32=\log_{10}3-\log_{10}2=0.1761$</li></ol>
+    </div>
+  </article>
+
+  <article class="card">
+    <button class="head"><span class="no">5-2</span><span class="ttl">桁数</span><span class="tog">+</span><span class="q">$N$ が $n$ 桁 $\Leftrightarrow$ ？</span></button>
+    <div class="body"><div class="inner"><div class="pad">
+      <span class="cond">$N$ が $\htmlClass{nn}{n}$ 桁の整数</span>
+      <div class="f">$\Leftrightarrow 10^{n-1}\le N&lt;10^{\htmlClass{nn}{n}}$</div>
+      <div class="f">$\Leftrightarrow$ <span class="box">$n-1\le \log_{10}N&lt;n$</span></div>
+      <div class="digits" data-mode="int"></div>
+      <div class="ex"><span class="lb">EX</span>$\log_{10}2^{50}=50\times0.3010=15.05$<br>→ <b>16 桁</b></div>
+    </div></div></div>
+    <div class="rei">
+      <ol class="probs"><li>$3^{30}$ は何桁の整数か（$\log_{10}3=0.4771$）</li></ol>
+      <ol class="probs"><li>$\log_{10}3^{30}=30\times0.4771=14.313$<br>$14\le\log_{10}3^{30}&lt;15$ より $10^{14}\le 3^{30}&lt;10^{15}$　→　<b>15 桁</b></li></ol>
+    </div>
+  </article>
+
+  <article class="card">
+    <button class="head"><span class="no">5-3</span><span class="ttl">小数首位</span><span class="tog">+</span><span class="q">小数第何位に初めて $0$ でない数字？</span></button>
+    <div class="body"><div class="inner"><div class="pad">
+      <span class="cond">小数第 $\htmlClass{nn}{n}$ 位に初めて $0$ でない数字</span>
+      <div class="f">$\Leftrightarrow 10^{-\htmlClass{nn}{n}}\le N&lt;10^{-n+1}$</div>
+      <div class="f">$\Leftrightarrow$ <span class="box">$-n\le \log_{10}N&lt;-n+1$</span></div>
+      <div class="digits" data-mode="dec"></div>
+      <div class="ex"><span class="lb">EX</span>$\log_{10}\left(\frac12\right)^{20}=-6.02$<br>→ <b>小数第 7 位</b></div>
+    </div></div></div>
+    <div class="rei">
+      <ol class="probs"><li>$\left(\frac13\right)^{20}$ を小数で表すと，小数第何位に初めて $0$ でない数字が現れるか</li></ol>
+      <ol class="probs"><li>$\log_{10}\left(\frac13\right)^{20}=-20\times0.4771=-9.542$<br>$-10\le -9.542&lt;-9$　→　<b>小数第 10 位</b></li></ol>
+    </div>
+  </article>
+
+  <article class="card">
+    <button class="head"><span class="no">5-4</span><span class="ttl">最高位の数字</span><span class="tog">+</span><span class="q">先頭の数字はどう求める？</span></button>
+    <div class="body"><div class="inner"><div class="pad">
+      <span class="cond">$0\le\alpha&lt;1$</span>
+      <div class="f">$\log_{10}N=(\text{整数})+\alpha$</div>
+      <div class="f">$\log_{10}k\le\alpha&lt;\log_{10}(k+1)$</div>
+      <div class="f">⇒ 最高位の数字は <span class="box">$k$</span></div>
+      <div class="ex"><span class="lb">EX</span>$2^{50}$：$\alpha=0.05$，$\log_{10}1\le0.05&lt;\log_{10}2$<br>→ 最高位は <b>1</b></div>
+    </div></div></div>
+    <div class="rei">
+      <ol class="probs"><li>$3^{30}$ の最高位の数字を求めよ</li></ol>
+      <ol class="probs"><li>$\log_{10}3^{30}=14.313$ より $\alpha=0.313$<br>$\log_{10}2=0.3010\le0.313&lt;0.4771=\log_{10}3$　→　<b>2</b></li></ol>
+    </div>
+  </article>
+</section>
+
+</main>
+
+<div class="bar">
+  <button class="opt" id="reset" title="R">リセット</button>
+  <button class="opt" id="all" title="A">すべて開く</button>
+  <span class="sep opt"></span>
+  <button id="prev" title="←">◀ 前へ</button>
+  <span class="count" id="count"><b>0</b> / 22</span>
+  <button class="main" id="next" title="→ / Space">次へ ▶</button>
+  <span class="sep"></span>
+  <button id="zoomBtn" title="F / ダブルクリック">拡大</button>
+</div>
+
+<div class="zoom" id="zoom"><div class="zcard" id="zcard"></div></div>
+
+<script>
+/* ---------- グラフ（ラベルは TeX） ---------- */
+const PAD=6;
+function plot(o){
+  const W=o.w||320,H=o.h||230,[x0,x1]=o.x,[y0,y1]=o.y;
+  const sx=x=>(x-x0)/(x1-x0)*W, sy=y=>H-(y-y0)/(y1-y0)*H;
+  const px=x=>((sx(x)+PAD)/(W+2*PAD)*100).toFixed(2)+'%', py=y=>((sy(y)+PAD)/(H+2*PAD)*100).toFixed(2)+'%';
+  let s=`<svg viewBox="-${PAD} -${PAD} ${W+2*PAD} ${H+2*PAD}"><defs><clipPath id="c${o.id}"><rect x="0" y="0" width="${W}" height="${H}"/></clipPath></defs>`;
+  for(let i=Math.ceil(x0);i<=x1;i++) s+=`<line x1="${sx(i)}" y1="0" x2="${sx(i)}" y2="${H}" stroke="#eee8dc"/>`;
+  for(let j=Math.ceil(y0);j<=y1;j++) s+=`<line x1="0" y1="${sy(j)}" x2="${W}" y2="${sy(j)}" stroke="#eee8dc"/>`;
+  s+=`<line x1="0" y1="${sy(0)}" x2="${W}" y2="${sy(0)}" stroke="#9a9ca6" stroke-width="1.2"/>`;
+  s+=`<line x1="${sx(0)}" y1="${H}" x2="${sx(0)}" y2="0" stroke="#9a9ca6" stroke-width="1.2"/>`;
+  s+=`<g clip-path="url(#c${o.id})">`;
+  o.curves.forEach(c=>{
+    const a=c.from??x0, b=c.to??x1; let d='';
+    for(let k=0;k<=300;k++){const x=a+(b-a)*k/300, y=c.f(x); if(!isFinite(y))continue; d+=(d?'L':'M')+sx(x).toFixed(1)+' '+sy(Math.max(Math.min(y,y1+3),y0-3)).toFixed(1);}
+    s+= c.dash ? `<path d="${d}" fill="none" stroke="${c.color}" stroke-width="1.4" stroke-dasharray="5 5"/>`
+               : `<path class="curve" pathLength="1" d="${d}" stroke="${c.color}"/>`;
+  });
+  s+=`</g>`;
+  (o.pts||[]).forEach(p=>s+=`<circle cx="${sx(p[0])}" cy="${sy(p[1])}" r="4" fill="#fff" stroke="#1d2230" stroke-width="1.6"/>`);
+  s+='</svg>';
+  // 軸ラベル・点ラベル・曲線ラベル
+  const lab=(x,y,tex,cls='',col='')=>`<span class="pl ${cls}" style="left:${px(x)};top:${py(y)};${col?'color:'+col:''}">$${tex}$</span>`;
+  const dx=(x1-x0)/W*10, dy=(y1-y0)/H*10;
+  s+=lab(x1-dx*.8,dy*1.2,'x')+lab(dx*1.1,y1-dy*.9,'y')+lab(-dx*1.1,-dy*1.3,'O');
+  (o.pts||[]).forEach(p=>s+=lab(p[0]+p[3]*dx,p[1]+p[4]*dy,p[2]));
+  (o.labels||[]).forEach(l=>s+=lab(l[0],l[1],l[2],'c',l[3]));
+  return s;
+}
+const C2='#d4932a',C4='#3c67a6',GR='#8b8f9a';
+const PLOTS={
+  exp:{id:'e',x:[-3.2,3.2],y:[-0.8,5.4],
+    curves:[{f:x=>Math.pow(2,x),color:C2},{f:x=>Math.pow(.5,x),color:GR}],
+    pts:[[0,1,'1',-1,1.2]],
+    labels:[[2.35,2.6,'y=2^x',C2],[-2.3,2.6,'y=\\left(\\frac12\\right)^x',GR]]},
+  log:{id:'l',x:[-0.8,5.4],y:[-3.2,3.2],
+    curves:[{f:x=>Math.log2(x),color:C4,from:0.001},{f:x=>-Math.log2(x),color:GR,from:0.001}],
+    pts:[[1,0,'1',0.6,-1.4]],
+    labels:[[4,1.1,'y=\\log_2 x',C4],[4,-1.0,'y=\\log_{\\frac12} x',GR]]},
+  sym:{id:'s',x:[-2.6,4.6],y:[-2.6,4.6],w:300,h:300,
+    curves:[{f:x=>x,color:'#b9bcc5',dash:1},{f:x=>Math.pow(2,x),color:C2},{f:x=>Math.log2(x),color:C4,from:0.001}],
+    labels:[[-1.4,1.0,'y=2^x',C2],[3.5,0.8,'y=\\log_2 x',C4],[3.0,3.9,'y=x','#8b8f9a']]}
+};
+document.querySelectorAll('[data-plot]').forEach(el=>el.innerHTML=plot(PLOTS[el.dataset.plot]));
+
+/* ---------- TeX 描画 ---------- */
+function tex(el){
+  if(window.renderMathInElement) renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false,strict:false,trust:c=>c.command==='\\htmlClass'});
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  tex(document.body); drawAllDigits(); measureDsc(document);
+  if(document.fonts) document.fonts.ready.then(()=>measureDsc(document));
+});
+window.addEventListener('resize',()=>measureDsc(document));
+
+/* ---------- 指数が下りる：移動量を測る ---------- */
+function measureDsc(root){
+  root.querySelectorAll('.dsc').forEach(el=>{
+    const k=el.closest('.katex'), t=k&&k.querySelector('.dst'); if(!t) return;
+    el.classList.add('meas');
+    const a=el.getBoundingClientRect(), b=t.getBoundingClientRect();
+    const s=parseFloat(getComputedStyle(t).fontSize)/parseFloat(getComputedStyle(el).fontSize);
+    el.classList.remove('meas');
+    if(!a.width) return;
+    el.style.setProperty('--dx',(b.left-a.left)+'px');
+    el.style.setProperty('--dy',(b.bottom-a.bottom)+'px');
+    el.style.setProperty('--s',s);
+  });
+}
+
+/* ---------- 桁数・小数首位：n を変えながら具体例を見せる ---------- */
+let dgStep=0;
+const kt=t=>window.katex?katex.renderToString(t,{throwOnError:false,strict:false,trust:c=>c.command==='\\htmlClass'}):t;
+function drawDigits(el){
+  const dec=el.dataset.mode==='dec';
+  const n=dec ? dgStep%4+1 : dgStep%5+1;
+  let m,row;
+  if(!dec){
+    m=kt(`10^{${n-1}}=${'1'+'0'.repeat(n-1)}\\le N<${'1'+'0'.repeat(n)}=10^{\\htmlClass{nn2}{${n}}}`);
+    row='<span class="dg-eq">'+kt('N=')+'</span>';
+    for(let k=1;k<=n;k++) row+=`<span class="dg-c" style="animation-delay:${k*.12}s">?<i>${k}</i></span>`;
+    row+=`<span class="dg-to">→ <span class="nn2">${n}</span> 桁</span>`;
+  }else{
+    const up = n===1 ? '1' : '0.'+'0'.repeat(n-2)+'1';
+    m=kt(`10^{-\\htmlClass{nn2}{${n}}}=0.${'0'.repeat(n-1)}1\\le N<${up}=10^{-${n}+1}`);
+    row='<span class="dg-eq">'+kt('N=')+'</span><span class="dg-c z">0</span><span class="dg-dot">.</span>';
+    for(let k=1;k<=n;k++) row+=`<span class="dg-c ${k<n?'z':'hot'}" style="animation-delay:${k*.12}s">${k<n?'0':'?'}<i>${k}</i></span>`;
+    row+=`<span class="dg-to">→ 小数第 <span class="nn2">${n}</span> 位</span>`;
+  }
+  el.innerHTML=`<div class="dg"><div class="dg-m">${m}</div><div class="dg-row">${row}</div></div>`;
+}
+function drawAllDigits(){ document.querySelectorAll('.digits').forEach(drawDigits); }
+setInterval(()=>{ dgStep++; drawAllDigits(); },3000);
+
+/* ---------- 状態 ---------- */
+const cards=[...document.querySelectorAll('.card')];
+const chaps=[...document.querySelectorAll('.chap')];
+const N=cards.length; let cur=-1;
+const $=id=>document.getElementById(id);
+
+const map=$('map');
+chaps.forEach((ch,ci)=>{
+  if(ci) map.insertAdjacentHTML('beforeend','<span class="arrow"></span>');
+  const b=document.createElement('button'); b.className='chip'; b.style.setProperty('--ac',getComputedStyle(ch).getPropertyValue('--ac'));
+  const cs=[...ch.querySelectorAll('.card')];
+  b.innerHTML=`<span class="n">${ci+1}</span><span class="nm">${ch.dataset.name}</span><span class="dots">${cs.map(()=>'<i></i>').join('')}</span>`;
+  b.onclick=()=>ch.scrollIntoView({behavior:'smooth',block:'start'});
+  map.appendChild(b); ch._chip=b;
+});
+cards.forEach((c,k)=>{
+  const ch=c.closest('.chap'); c._ch=ch; c._dot=ch._chip.querySelectorAll('.dots i')[[...ch.querySelectorAll('.card')].indexOf(c)];
+  c.insertAdjacentHTML('beforeend','<span class="zhint">ダブルクリックで拡大</span>');
+  // クリック：閉じていれば開く／×で閉じる
+  c.querySelector('.head').addEventListener('click',e=>{
+    if(!c.classList.contains('open')){ c.classList.add('open'); setCur(k,false); autoZap(c); }
+    else if(e.target.closest('.tog')){ c.classList.remove('open'); setCur(k===cur?-1:cur,false); }
+    else setCur(k,false);
+  });
+  // ダブルクリック：拡大
+  c.addEventListener('dblclick',e=>{
+    e.preventDefault(); window.getSelection().removeAllRanges();
+    if(e.target.closest('.tog')) return;
+    c.classList.add('open'); setCur(k,false); openZoom();
+  });
+});
+
+function setCur(i,scroll=true){
+  cur=i;
+  cards.forEach((c,k)=>{c.classList.toggle('cur',k===i); c._dot.classList.toggle('cur',k===i); c._dot.classList.toggle('on',c.classList.contains('open'));});
+  chaps.forEach(ch=>ch._chip.classList.toggle('done',[...ch.querySelectorAll('.card')].every(c=>c.classList.contains('open'))));
+  const opened=cards.filter(c=>c.classList.contains('open')).length;
+  $('count').innerHTML=`<b>${opened}</b> / ${N}`;
+  $('prog').style.width=(opened/N*100)+'%';
+  if(scroll&&i>=0) setTimeout(()=>cards[i].scrollIntoView({behavior:'smooth',block:'center'}),180);
+  if(zoomOn()){ i>=0?renderZoom():closeZoom(); }
+}
+function next(){
+  let i=cur;
+  if(i<0||cards[i].classList.contains('open')) i=cards.findIndex((c,k)=>k>cur&&!c.classList.contains('open'));
+  if(i<0) i=Math.min(cur+1,N-1);
+  cards[i].classList.add('open'); setCur(i);
+  if(!zoomOn()) autoZap(cards[i]);
+}
+
+/* ---------- びりびり→バーン：a^{log_a b} = b ---------- */
+function autoZap(root){ const st=root&&root.querySelector('.zap'); if(st) setTimeout(()=>runZap(st),700); }
+document.addEventListener('click',e=>{ const b=e.target.closest('.zplay'); if(b){ e.stopPropagation(); runZap(b.closest('.zap')); } });
+function runZap(st){
+  if(!st||st._busy) return; st._busy=true;
+  const q=s=>st.querySelector(s), A=q('.za'), B=q('.zb'), L=q('.zl'), R=q('.zr');
+  if(!A||!R){ st._busy=false; return; }
+  // リセット
+  st.classList.remove('charge','bang','done');
+  st.querySelectorAll('.bolt,.spark,.flash').forEach(x=>x.remove());
+  R.style.transition='none'; R.style.transform=''; R.offsetWidth; R.style.transition='';
+  const sr=st.getBoundingClientRect();
+  const ctr=el=>{const r=el.getBoundingClientRect(); return [r.left-sr.left+r.width/2, r.top-sr.top+r.height/2];};
+  const pa=ctr(A), pb=ctr(B), ra=A.getBoundingClientRect(), rr=R.getBoundingClientRect();
+  const er=st.querySelector('.zexp .katex').getBoundingClientRect();
+  const scale=parseFloat(getComputedStyle(A).fontSize)/parseFloat(getComputedStyle(R).fontSize);
+  // びりびり
+  st.classList.add('charge');
+  const ns='http://www.w3.org/2000/svg', svg=document.createElementNS(ns,'svg'); svg.setAttribute('class','bolt');
+  svg.setAttribute('width',sr.width); svg.setAttribute('height',sr.height);
+  const mk=c=>{const p=document.createElementNS(ns,'path'); if(c) p.setAttribute('class',c); svg.appendChild(p); return p;};
+  const p1=mk(''), p2=mk('thin'), p3=mk('thin');
+  st.appendChild(svg);
+  const sz=parseFloat(getComputedStyle(A).fontSize);
+  const bolt=(amp)=>{ // 上に弧を描くギザギザの稲妻
+    let d=`M${pa[0]} ${pa[1]}`; const n=9;
+    for(let k=1;k<n;k++){ const t=k/n, arc=-Math.sin(Math.PI*t)*sz*.55,
+      x=pa[0]+(pb[0]-pa[0])*t+(Math.random()-.5)*amp*.5, y=pa[1]+(pb[1]-pa[1])*t+arc+(Math.random()-.5)*amp; d+=` L${x} ${y}`; }
+    return d+` L${pb[0]} ${pb[1]}`; };
+  const timer=setInterval(()=>{ p1.setAttribute('d',bolt(sz*.35)); p2.setAttribute('d',bolt(sz*.5)); p3.setAttribute('d',bolt(sz*.25)); svg.style.opacity=Math.random()<.15?0:1; },55);
+  // バーン
+  setTimeout(()=>{
+    clearInterval(timer); svg.remove();
+    st.classList.remove('charge'); st.classList.add('bang');
+    const mx=(pa[0]+pb[0])/2, my=(pa[1]+pb[1])/2;
+    const fl=document.createElement('span'); fl.className='flash'; fl.style.left=mx+'px'; fl.style.top=my+'px'; st.appendChild(fl);
+    for(let k=0;k<18;k++){
+      const s=document.createElement('span'); s.className='spark'; s.style.left=(mx-3)+'px'; s.style.top=(my-3)+'px'; st.appendChild(s);
+      const ang=Math.random()*Math.PI*2, dist=40+Math.random()*70;
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{ s.style.transform=`translate(${Math.cos(ang)*dist}px,${Math.sin(ang)*dist}px) scale(.3)`; s.style.opacity=0; }));
+    }
+    // b が残る
+    setTimeout(()=>{
+      const tx=er.left+er.width/2-rr.width*scale/2-rr.left;   // 式の中央へ
+      R.style.transform=`translate(${tx}px,${ra.bottom-rr.bottom}px) scale(${scale})`;
+      st.classList.add('done'); st._busy=false;
+      setTimeout(()=>st.querySelectorAll('.spark,.flash').forEach(x=>x.remove()),800);
+    },450);
+  },1600);
+}
+function prev(){
+  if(cur<0) return;
+  if(zoomOn()){ setCur(cur-1); return; }   // 拡大中は閉じずに前のカードへ
+  cards[cur].classList.remove('open'); setCur(cur-1);
+}
+
+/* ---------- 拡大・例題 ---------- */
+const zoomOn=()=>$('zoom').classList.contains('show');
+function renderZoom(){
+  const c=cards[cur]; if(!c) return;
+  const z=$('zcard'); z.style.setProperty('--ac',getComputedStyle(c._ch).getPropertyValue('--ac'));
+  z.innerHTML=`<span class="zx" title="閉じる (Esc)">×</span><div class="zh"><span class="no">${c.querySelector('.no').textContent}</span><span class="ttl">${c.querySelector('.ttl').innerHTML}</span><span class="chn">${c._ch.dataset.name}</span></div>`;
+  z.appendChild(c.querySelector('.pad').cloneNode(true));
+  const r=c.querySelector('.rei');
+  if(r){
+    const [pr,an]=r.querySelectorAll('.probs');
+    z.insertAdjacentHTML('beforeend',`
+      <div class="reibar"><button class="rbtn" id="rb">例題 <span class="k">E</span></button><button class="rbtn" id="ab" hidden>答え <span class="k">S</span></button></div>
+      <div class="reibody" id="rbody"><div><div class="reibox"><h3>例題</h3>${pr.outerHTML}
+        <div class="ans" id="abody"><div><div class="ansbox">${an.outerHTML}</div></div></div></div></div></div>`);
+    $('rb').onclick=toggleRei; $('ab').onclick=toggleAns;
+  }
+  z.querySelector('.zx').onclick=closeZoom;
+  z.scrollTop=0;
+  autoZap(z);
+  requestAnimationFrame(()=>measureDsc(z));
+  z.style.animation='none'; z.offsetHeight; z.style.animation='';
+}
+function toggleRei(){
+  const b=$('rbody'); if(!b) return;
+  const on=b.classList.toggle('show'); $('rb').classList.toggle('on',on); $('ab').hidden=!on;
+  if(!on){ $('abody').classList.remove('show'); $('ab').classList.remove('on'); }
+  else setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'nearest'}),350);
+}
+function toggleAns(){
+  const a=$('abody'); if(!a) return;
+  if(!$('rbody').classList.contains('show')) toggleRei();
+  const on=a.classList.toggle('show'); $('ab').classList.toggle('on',on);
+  if(on) setTimeout(()=>a.scrollIntoView({behavior:'smooth',block:'nearest'}),400);
+}
+function openZoom(){ if(cur<0) next(); renderZoom(); $('zoom').classList.add('show'); }
+function closeZoom(){ $('zoom').classList.remove('show'); }
+
+$('next').onclick=next; $('prev').onclick=prev;
+$('zoomBtn').onclick=()=>zoomOn()?closeZoom():openZoom();
+$('zoom').addEventListener('click',e=>{ if(e.target.id==='zoom') closeZoom(); });
+$('zoom').addEventListener('dblclick',e=>{ if(!e.target.closest('button')) closeZoom(); });
+$('all').onclick=()=>{cards.forEach(c=>c.classList.add('open')); setCur(cur,false);};
+$('reset').onclick=()=>{cards.forEach(c=>c.classList.remove('open')); closeZoom(); setCur(-1,false); window.scrollTo({top:0,behavior:'smooth'});};
+document.addEventListener('keydown',e=>{
+  const k=e.key.toLowerCase();
+  if(k==='arrowright'||k===' '||k==='enter'){e.preventDefault(); next();}
+  else if(k==='arrowleft'){e.preventDefault(); prev();}
+  else if(k==='f') $('zoomBtn').click();
+  else if(k==='escape') closeZoom();
+  else if(k==='e'&&zoomOn()) toggleRei();
+  else if(k==='s'&&zoomOn()) toggleAns();
+  else if(k==='a') $('all').click();
+  else if(k==='r') $('reset').click();
+});
+if(location.hash==='#all') cards.forEach(c=>c.classList.add('open'));
+if(location.hash.startsWith('#z')){ const i=+location.hash.slice(2); cards[i].classList.add('open'); cur=i; window.addEventListener('load',()=>{openZoom(); if(location.hash.endsWith('e')){toggleRei(); toggleAns();}}); }
+setCur(cur,false);
+</script>
+</body>
+</html>
